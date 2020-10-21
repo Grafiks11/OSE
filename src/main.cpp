@@ -9,6 +9,7 @@ String instruction;
 void setup() {
   analogReference(INTERNAL); //Zmienia na 1.1V odniesienia
   Serial.begin(9600);
+  Serial.setTimeout(1000);
   pinMode(HEATER_PIN,OUTPUT);
   pinMode(FAN_PIN,OUTPUT);
 
@@ -42,8 +43,6 @@ void loop() {
     {
        temperature=analogRead(TEMP_PIN);
        Serial.println(temperature);
-    } 
-  
-   delay(1000);
+    }
    }
 }

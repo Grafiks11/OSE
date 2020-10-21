@@ -1,19 +1,20 @@
 #include <Arduino.h>
 
+#define TEMP_PIN A0
+#define HEATER_PIN 1
+#define FAN_PIN 2
+
 float temperature;
 float setTemperature=22;
-int tempPin = 0;
-int heater =1;
-int fan =2;
 String instruction;
 void setup() {
   analogReference(INTERNAL); //Zmienia na 1.1V odniesienia
   Serial.begin(9600);
-  pinMode(heater,OUTPUT);
-  pinMode(fan,OUTPUT);
+  pinMode(HEATER_PIN,OUTPUT);
+  pinMode(FAN_PIN,OUTPUT);
 
-  digitalWrite(heater,LOW);
-  digitalWrite(fan,LOW);
+  digitalWrite(HEATER_PIN,LOW);
+  digitalWrite(FAN_PIN,LOW);
 }
 
 
@@ -24,23 +25,23 @@ void loop() {
     instruction=Serial.readStringUntil('\n');
     if(instruction=="SET FAN")
     {
-      digitalWrite(fan,HIGH);
+      digitalWrite(FAN_PIN,HIGH);
     }
     else if(instruction=="RESET FAN")
     {
-      digitalWrite(fan,LOW);
+      digitalWrite(FAN_PIN,LOW);
     }
     else if (instruction=="SET HEATER")
     {
-       digitalWrite(heater,HIGH);
+       digitalWrite(HEATER_PIN,HIGH);
     }
     else if (instruction=="RESET HEATER")
     {
-       digitalWrite(heater,LOW);
+       digitalWrite(HEATER_PIN,LOW);
     }
     else if (instruction=="GET TEMP")
     {
-       temperature=analogRead(tempPin);
+       temperature=analogRead(TEMP_PIN);
 
         //przeliczanie temp
         //temperature=Vin/(10)=ADCresult*Vref/(1024*10)

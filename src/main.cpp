@@ -1,19 +1,22 @@
 #include <Arduino.h>
 
-float temperature;
-float setTemperature=22;
-int tempPin = 0;
-int heater =1;
-int fan =2;
-String instruction;
+#define TEMP_PIN A0
+#define HEATER_PIN 1
+#define FAN_PIN 2
+#define BUFFER_LEN 64
+
+int temperature;
+char buffer[BUFFER_LEN];
+
 void setup() {
   analogReference(INTERNAL); //Zmienia na 1.1V odniesienia
   Serial.begin(9600);
-  pinMode(heater,OUTPUT);
-  pinMode(fan,OUTPUT);
+  Serial.setTimeout(1000);
+  pinMode(HEATER_PIN,OUTPUT);
+  pinMode(FAN_PIN,OUTPUT);
 
-  digitalWrite(heater,LOW);
-  digitalWrite(fan,LOW);
+  digitalWrite(HEATER_PIN,LOW);
+  digitalWrite(FAN_PIN,LOW);
 }
 
 
@@ -21,33 +24,28 @@ void setup() {
 void loop() {
   if (Serial.available() > 0)
   {
-    instruction=Serial.readStringUntil('\n');
-    if(instruction=="SET FAN")
+    Serial.readBytesUntil('\n',buffer,BUFFER_LEN);
+    if(strcasecmp(buffer,"SET FAN")==0)
     {
-      digitalWrite(fan,HIGH);
+      digitalWrite(FAN_PIN,HIGH);
     }
-    else if(instruction=="RESET FAN")
+    else if(strcasecmp(buffer,"RESET FAN")==0)
     {
-      digitalWrite(fan,LOW);
+      digitalWrite(FAN_PIN,LOW);
     }
-    else if (instruction=="SET HEATER")
+    else if (strcasecmp(buffer,"SET HEATER")==0)
     {
-       digitalWrite(heater,HIGH);
+       digitalWrite(HEATER_PIN,HIGH);
     }
-    else if (instruction=="RESET HEATER")
+    else if (strcasecmp(buffer,"RESET HEATER")==0)
     {
-       digitalWrite(heater,LOW);
+       digitalWrite(HEATER_PIN,LOW);
     }
-    else if (instruction=="GET TEMP")
+    else if (strcasecmp(buffer,"GET TEMP")==0)
     {
-       temperature=analogRead(tempPin);
-
-        //przeliczanie temp
-        //temperature=Vin/(10)=ADCresult*Vref/(1024*10)
-        temperature=temperature*1100/(1024*10); 
-        Serial.write((byte)temperature);
-    } 
-  
-   delay(1000);
-   }
+       temperature=analogRead(TEMP_PIN);
+       Serial.println(temperature);
+    }
+    memset(buffer,'\0',BUFFER_LEN);
+  }
 }

@@ -25,23 +25,23 @@ void loop() {
   if (Serial.available() > 0)
   {
     Serial.readBytesUntil('\n',buffer,BUFFER_LEN);
-    if(strcasecmp(buffer,"SET FAN")==0)
+    if(strcasecmp(buffer,"F=1")==0)
     {
       digitalWrite(FAN_PIN,HIGH);
     }
-    else if(strcasecmp(buffer,"RESET FAN")==0)
+    else if(strcasecmp(buffer,"F=0")==0)
     {
       digitalWrite(FAN_PIN,LOW);
     }
-    else if (strcasecmp(buffer,"SET HEATER")==0)
+    else if (strcasecmp(buffer,"H=1")==0)
     {
        digitalWrite(HEATER_PIN,HIGH);
     }
-    else if (strcasecmp(buffer,"RESET HEATER")==0)
+    else if (strcasecmp(buffer,"H=0")==0)
     {
        digitalWrite(HEATER_PIN,LOW);
     }
-    else if (strcasecmp(buffer,"GET TEMP")==0)
+    else if (strcasecmp(buffer,"T=?")==0)
     {
        temperature=analogRead(TEMP_PIN);
        Serial.println(temperature);
